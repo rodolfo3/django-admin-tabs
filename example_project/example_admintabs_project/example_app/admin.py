@@ -11,8 +11,8 @@ class ArticlePageConfig(TabbedPageConfig):
         titles = Config(fields=["title", "subtitle"], name="Title & Subtitle")
         miscdata = Config(fields=["modified_at", "created_at", "is_online"], name="Dates & State")
         content = Config(name="Content", fields=["content"])
-        authors = Config(name="Authors", inline="ArticleToUserInline")
-        categories = Config(name="Category", inline="ArticleToCategoryInline")
+        authors = Config(name="Authors", inlines=["ArticleToUserInline"])
+        categories = Config(name="Category", inlines=["ArticleToCategoryInline"])
     
     class ColsConfig:
         content_col = Config(name="Contenu", fieldsets=["content"], css_classes=["col1"])

@@ -47,23 +47,29 @@ class AdminCol(object):
     
     def get_elements(self, request, obj=None, include_inlines=False):
         col_elements = []
+
         for fieldset_config in self.fieldsets:
-            if fieldset_config.inline is not None:
-                if not include_inlines:
-                    continue # not inlines here
-                col_element = (
-                    fieldset_config.name,
-                    {"inline": fieldset_config.inline}
-                )
-            else: # Classic fieldset
-                col_element = (
+            # else: # Classic fieldset
+            # from IPython import embed ; embed()
+            if fieldset_config.fields:
+                col_element = [(
                     fieldset_config.name,
                     {
                         "fields": fieldset_config.fields,
                         "classes": fieldset_config.css_classes,
                     }
-                )
-            col_elements.append(col_element)
+                )]
+            col_elements.extend(col_element)
+
+        if include_inlines:
+            for fieldset_config in self.fieldsets:
+                if fieldset_config.inlines is not None:
+                    col_element = [(
+                            fieldset_config.name,
+                            {"inline": i}
+                        ) for i in fieldset_config.inlines]
+                col_elements.extend(col_element)
+
         return col_elements
 
 
@@ -117,11 +123,11 @@ class AdminFieldsetConfig(object):
     
     It can be a real Fieldset or an Inline.
     """
-    def __init__(self, fields=None, inline=None, name=None, css_classes=None, description=None):
+    def __init__(self, fields=None, inlines=None, name=None, css_classes=None, description=None):
         self.description = description
         self.css_classes = css_classes or []
         self.fields = fields
-        self.inline = inline
+        self.inlines = inlines
         self.name = name
     
     def __iter__(self):
