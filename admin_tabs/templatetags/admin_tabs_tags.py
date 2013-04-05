@@ -19,13 +19,11 @@ def render_fieldsets_for_admincol(context, admin_col):
     request = context['request']
     obj = context.get('original', None)
     fieldsets = admin_col.get_elements(request, obj, include_inlines=True)
-    print '>>>', fieldsets
     readonly_fields = admin_form.model_admin.get_readonly_fields(request, obj)
     template = "admin/includes/fieldset.html"
     # Make a dict matching to retrieve inline_admin_formsets
     # {"inline class name": inline_formset_instance}
     inline_matching = dict((inline.opts.__class__.__name__, inline) for inline in context["inline_admin_formsets"])
-    print '>>>', fieldsets
     for name, options in fieldsets:
         if "fields" in options:
             f = Fieldset(admin_form.form, name,
